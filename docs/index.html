@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Indicadores «No Hacer»</title>
+<meta name="description" content="Asistente para Claude y ChatGPT que convierte recomendaciones «No Hacer» en indicadores de calidad asistencial medibles y reproducibles.">
+<link rel="canonical" href="https://victoriavics.github.io/indicadores-no-hacer-skill/">
+<meta name="theme-color" content="#0d2230">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="Indicadores «No Hacer»">
+<meta property="og:url" content="https://victoriavics.github.io/indicadores-no-hacer-skill/">
+<meta property="og:title" content="Indicadores «No Hacer»">
+<meta property="og:description" content="Lo que no se debería hacer también se puede medir. Skill para Claude y ChatGPT que convierte recomendaciones «No Hacer» en indicadores de calidad asistencial.">
+<meta property="og:image" content="https://victoriavics.github.io/indicadores-no-hacer-skill/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Indicadores No Hacer, con «Hacer» tachado en rojo, y una fracción: población diana que recibió la actuación entre población diana.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Indicadores «No Hacer»">
+<meta name="twitter:description" content="Lo que no se debería hacer también se puede medir. Skill para Claude y ChatGPT.">
+<meta name="twitter:image" content="https://victoriavics.github.io/indicadores-no-hacer-skill/og.png">
+<meta name="twitter:image:alt" content="Indicadores No Hacer, con «Hacer» tachado en rojo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: señalética clínica. Columna editorial de 1120px; el héroe enfrenta el titular a una ficha técnica real. Un solo gesto en rojo: el tachado. */
+:root {
+  --paper: #f2f5f6;
+  --surface: #ffffff;
+  --ink: #0d2230;
+  --ink-2: #3f5664;
+  --line: #d3dde2;
+  --wash: #e6edf0;
+  --signal: #d1263a;
+  --petrol: #0a6c78;
+  --petrol-wash: #dcefef;
+  --on-ink: #f2f5f6;
+  --shadow: 0 1px 0 rgba(13,34,48,.04), 0 12px 32px -12px rgba(13,34,48,.18);
+
+  --f-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --step--1: .875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.3rem;
+  --step-2: 1.75rem;
+  --step-3: clamp(2rem, 4.2vw, 2.9rem);
+  --step-4: clamp(3.4rem, 9vw, 7.25rem);
+  --gutter: clamp(16px, 4vw, 40px);
+  --nav-h: 60px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0b1820;
+    --surface: #10222c;
+    --ink: #e3ecef;
+    --ink-2: #9fb2bc;
+    --line: #233945;
+    --wash: #142a35;
+    --signal: #ff5b6b;
+    --petrol: #5cc6cf;
+    --petrol-wash: #123540;
+    --on-ink: #0b1820;
+    --shadow: none;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0b1820;
+  --surface: #10222c;
+  --ink: #e3ecef;
+  --ink-2: #9fb2bc;
+  --line: #233945;
+  --wash: #142a35;
+  --signal: #ff5b6b;
+  --petrol: #5cc6cf;
+  --petrol-wash: #123540;
+  --on-ink: #0b1820;
+  --shadow: none;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 16px); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 var(--step-0)/1.62 var(--f-body);
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--petrol); text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--petrol); outline-offset: 3px; border-radius: 4px; }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: var(--gutter); }
+
+/* ---------- Nav ---------- */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  backdrop-filter: saturate(1.4) blur(12px);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.nav .wrap { display: flex; align-items: center; gap: 24px; min-height: var(--nav-h); }
+.brand {
+  display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink);
+  font: 800 1rem/1 var(--f-display); font-stretch: 80%; letter-spacing: .01em; white-space: nowrap;
+}
+.brand-mark { width: 26px; height: 26px; flex: none; }
+.nav-links { display: flex; gap: 22px; margin-left: auto; align-items: center; }
+.nav-links a {
+  color: var(--ink-2); text-decoration: none;
+  font: 500 .95rem/1 var(--f-display); font-stretch: 95%;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-cta {
+  background: var(--ink); color: var(--on-ink) !important; padding: 10px 16px; border-radius: 999px;
+}
+.nav-cta:hover { background: var(--petrol); }
+@media (max-width: 760px) {
+  .nav-links a:not(.nav-cta) { display: none; }
+}
+
+/* ---------- Type ---------- */
+.eyebrow {
+  font: 500 .78rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--petrol);
+  margin: 0 0 14px;
+}
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; color: var(--ink); }
+h2 { font-size: var(--step-3); font-weight: 800; font-stretch: 78%; line-height: 1.02; letter-spacing: -.005em; }
+h3 { font-size: var(--step-1); font-weight: 700; font-stretch: 90%; line-height: 1.2; }
+p { margin: 0; }
+.prose { max-width: 62ch; display: grid; gap: 16px; }
+.muted { color: var(--ink-2); }
+
+/* ---------- Hero ---------- */
+.hero { padding-block: clamp(48px, 8vw, 96px) clamp(56px, 8vw, 104px); }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+@media (max-width: 900px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); } }
+.hero h1 {
+  font-size: var(--step-4); font-weight: 900; font-stretch: 68%; line-height: .9; letter-spacing: -.01em;
+  text-transform: uppercase;
+}
+.hero h1 .small {
+  display: block; font-size: .32em; font-weight: 600; font-stretch: 90%; letter-spacing: .06em;
+  color: var(--ink-2); margin-bottom: .55em;
+}
+.strike { position: relative; display: inline-block; }
+.strike::after {
+  content: ""; position: absolute; left: -3%; right: -3%; top: 52%; height: .085em;
+  background: var(--signal); transform-origin: left center; transform: rotate(-4deg) scaleX(1);
+  animation: strike 700ms cubic-bezier(.7,0,.2,1) 350ms both;
+}
+@keyframes strike { from { transform: rotate(-4deg) scaleX(0); } to { transform: rotate(-4deg) scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .strike::after { animation: none; } }
+.lede { font-size: var(--step-1); line-height: 1.5; color: var(--ink-2); max-width: 34ch; margin-top: 28px; }
+.lede strong { color: var(--ink); font-weight: 600; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer;
+  font: 600 1rem/1 var(--f-display); font-stretch: 95%;
+  padding: 15px 22px; border-radius: 999px; border: 1.5px solid var(--ink);
+  background: var(--ink); color: var(--on-ink);
+  transition: background .15s, border-color .15s, color .15s;
+}
+.btn:hover { background: var(--petrol); border-color: var(--petrol); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--ink); background: transparent; }
+.btn svg { width: 18px; height: 18px; }
+
+/* Anatomía: recomendación -> indicador */
+.anatomy {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow);
+  margin: 0; padding: 26px 26px 22px; display: grid; gap: 22px;
+}
+.an-label { font: 500 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+.reco { font: 600 1.45rem/1.55 var(--f-display); font-stretch: 88%; margin: 0; }
+.reco-no { color: var(--signal); }
+.slot { position: relative; display: inline-block; padding: 0 .1em; border-bottom: 3px solid currentColor; line-height: 1.15; }
+.slot.a { color: var(--petrol); }
+.slot.p { color: var(--ink); border-bottom-style: dotted; }
+.slot.e { color: var(--ink-2); border-bottom-style: dashed; }
+.legend { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: .95rem; }
+.legend li { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); gap: 10px; align-items: baseline; }
+.legend i { display: block; height: 3px; border-bottom: 3px solid currentColor; transform: translateY(-4px); }
+.legend .a i { color: var(--petrol); }
+.legend .p i { color: var(--ink); border-bottom-style: dotted; }
+.legend .e i { color: var(--ink-2); border-bottom-style: dashed; }
+.arrow { display: flex; align-items: center; gap: 12px; color: var(--ink-2); font: 500 .72rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; }
+.arrow::before, .arrow::after { content: ""; height: 1px; background: var(--line); flex: 1; }
+.result { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; align-items: center; }
+.frac { display: grid; font: 600 1.02rem/1.35 var(--f-display); font-stretch: 92%; text-align: center; }
+.frac span { padding: 8px 4px; }
+.frac span:first-child { border-bottom: 2px solid var(--ink); }
+.pct { font: 900 2.6rem/1 var(--f-display); font-stretch: 62%; color: var(--petrol); }
+.pct small { display: block; font: 500 .66rem/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); margin-top: 6px; }
+
+/* ---------- Sections ---------- */
+section.block { padding-block: clamp(64px, 9vw, 112px); border-top: 1px solid var(--line); }
+.split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 72px); align-items: start; }
+@media (max-width: 860px) { .split { grid-template-columns: minmax(0, 1fr); } }
+.section-head { display: grid; gap: 0; margin-bottom: 40px; max-width: 760px; }
+.section-head p.muted { margin-top: 16px; font-size: var(--step-1); line-height: 1.5; }
+
+.frames { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.frames span {
+  font: 500 .9rem/1 var(--f-display); font-stretch: 90%;
+  padding: 9px 13px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+}
+
+.examples { display: grid; gap: 0; border-top: 2px solid var(--ink); }
+.examples li {
+  list-style: none; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: 12px;
+  padding: 18px 0; border-bottom: 1px solid var(--line); align-items: baseline;
+}
+.examples { padding: 0; margin: 0; }
+.no {
+  font: 800 .78rem/1 var(--f-display); font-stretch: 75%; letter-spacing: .04em; color: var(--signal);
+  border: 1.5px solid var(--signal); border-radius: 999px; width: 2.2rem; height: 2.2rem;
+  display: grid; place-items: center; text-transform: uppercase;
+}
+.examples p { font-size: 1.05rem; }
+.examples small { display: block; font: 400 .8rem/1.4 var(--f-mono); color: var(--ink-2); margin-top: 6px; }
+
+/* AA vs SU */
+.measure { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 760px) { .measure { grid-template-columns: minmax(0, 1fr); } }
+.m-card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 28px; display: grid; gap: 14px; align-content: start; }
+.m-code { font: 900 3.2rem/1 var(--f-display); font-stretch: 62%; color: var(--petrol); letter-spacing: -.01em; }
+.m-q { font-size: 1.05rem; }
+.fraction { display: grid; gap: 0; margin-top: 6px; font-size: .98rem; }
+.fraction > div { padding: 12px 0; display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 12px; }
+.fraction > div:first-child { border-bottom: 2px solid var(--ink); }
+.fraction span { font: 500 .72rem/1.6 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+@media (max-width: 420px) { .fraction > div { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+
+.terms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 48px; border-top: 2px solid var(--ink); }
+@media (max-width: 760px) { .terms { grid-template-columns: minmax(0, 1fr); } }
+.terms div { padding: 20px 24px 20px 0; display: grid; gap: 8px; align-content: start; }
+.terms div + div { padding-left: 24px; border-left: 1px solid var(--line); }
+@media (max-width: 760px) { .terms div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); } }
+.terms dt { font: 700 1.05rem/1.2 var(--f-display); font-stretch: 90%; }
+.terms dd { margin: 0; color: var(--ink-2); font-size: .98rem; }
+
+.quote {
+  margin: 72px 0 0; padding: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; align-items: start;
+}
+.quote svg { width: 64px; height: 64px; color: var(--petrol); }
+.quote blockquote {
+  margin: 0; font: 700 var(--step-2)/1.18 var(--f-display); font-stretch: 85%; max-width: 30ch; text-wrap: balance;
+}
+.quote figcaption { font: 400 .85rem/1.4 var(--f-mono); color: var(--ink-2); margin-top: 14px; }
+@media (max-width: 520px) { .quote { grid-template-columns: minmax(0, 1fr); } }
+
+/* Análisis */
+.phases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 900px) { .phases { grid-template-columns: minmax(0, 1fr); } }
+.phase { display: grid; gap: 0; align-content: start; }
+.phase-label {
+  font: 500 .76rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2);
+  padding-bottom: 12px; border-bottom: 2px solid var(--ink);
+}
+.an { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: 4px 12px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.an-n { font: 900 1.9rem/1 var(--f-display); font-stretch: 62%; color: var(--petrol); grid-row: span 2; font-variant-numeric: tabular-nums; }
+.an h3 { font-size: 1.12rem; }
+.an p { font-size: .95rem; color: var(--ink-2); }
+.an p b { font: 500 .72rem/1 var(--f-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink); display: block; margin-top: 8px; }
+.note-line { margin-top: 28px; color: var(--ink-2); max-width: 70ch; }
+
+/* ---------- Instalar ---------- */
+#instalar { background: var(--surface); }
+.choose { display: grid; gap: 14px; }
+.choose-q { font: 700 1.05rem/1.2 var(--f-display); font-stretch: 92%; margin: 0; }
+.choose-q.sub { margin-top: 18px; color: var(--ink-2); font-weight: 600; font-size: .98rem; }
+.choices { display: grid; gap: 12px; }
+.choices.big { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 760px; }
+.choices.small { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 760px; }
+@media (max-width: 560px) { .choices.big, .choices.small { grid-template-columns: minmax(0, 1fr); } }
+.tab {
+  appearance: none; cursor: pointer; text-align: left; color: var(--ink);
+  background: var(--paper); border: 1.5px solid var(--line); border-radius: 14px;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 14px;
+  padding: 20px 20px; font: inherit;
+  transition: border-color .15s, background .15s, box-shadow .15s, transform .15s;
+}
+.choices.small .tab { padding: 14px 16px; border-radius: 12px; }
+.tab:hover { border-color: var(--ink-2); transform: translateY(-1px); }
+.tab-name { font: 800 1.35rem/1.1 var(--f-display); font-stretch: 85%; }
+.choices.small .tab-name { font-size: 1.05rem; font-weight: 700; font-stretch: 92%; }
+.tab-sub { grid-column: 1; font-size: .92rem; color: var(--ink-2); }
+.choices.small .tab-sub { font: 400 .76rem/1.3 var(--f-mono); }
+.radio {
+  grid-column: 2; grid-row: 1 / span 2; width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid var(--line); display: grid; place-items: center; transition: border-color .15s;
+}
+.radio::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--petrol); transform: scale(0); transition: transform .15s; }
+.tab[aria-selected="true"] { border-color: var(--petrol); background: var(--petrol-wash); box-shadow: 0 0 0 3px color-mix(in srgb, var(--petrol) 18%, transparent); }
+.tab[aria-selected="true"] .radio { border-color: var(--petrol); }
+.tab[aria-selected="true"] .radio::after { transform: scale(1); }
+@media (prefers-reduced-motion: reduce) { .tab, .radio::after { transition: none; } .tab:hover { transform: none; } }
+
+.panels { margin-top: 32px; }
+.panel { display: grid; gap: 28px; }
+.panel-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 16px; }
+.panel-head h3 { font-size: var(--step-2); font-stretch: 80%; font-weight: 800; }
+.badge {
+  font: 500 .72rem/1 var(--f-mono); letter-spacing: .05em; text-transform: uppercase;
+  padding: 6px 9px; border-radius: 999px; background: var(--petrol-wash); color: var(--petrol);
+}
+.route { display: grid; gap: 4px; }
+.route + .route { border-top: 1px dashed var(--line); padding-top: 28px; }
+.route-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-bottom: 8px; }
+.route-title h4 { margin: 0; font: 700 1.15rem/1.2 var(--f-display); font-stretch: 90%; }
+.route-title span { color: var(--ink-2); font-size: .95rem; }
+
+ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; gap: 0; }
+ol.steps > li {
+  counter-increment: s; display: grid; grid-template-columns: 2.2rem minmax(0, 1fr); gap: 14px;
+  padding: 18px 0; border-bottom: 1px solid var(--line);
+}
+ol.steps > li:last-child { border-bottom: 0; }
+ol.steps > li::before {
+  content: counter(s); font: 800 .95rem/1 var(--f-display); color: var(--ink);
+  width: 2rem; height: 2rem; border-radius: 50%; border: 1.5px solid var(--ink); display: grid; place-items: center;
+}
+.step-body { display: grid; gap: 14px; min-width: 0; }
+.ui { font: 600 .92em/1 var(--f-display); font-stretch: 95%; background: var(--wash); padding: 3px 7px; border-radius: 5px; white-space: nowrap; }
+.shot { margin: 0; max-width: 640px; }
+.shot img { border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); }
+.repo { font: 500 .9rem/1.3 var(--f-mono); background: var(--wash); padding: 3px 7px; border-radius: 5px; word-break: break-all; }
+
+.cmd {
+  display: flex; align-items: stretch; background: var(--ink); color: var(--on-ink); border-radius: 10px; overflow: hidden;
+}
+.cmd pre { margin: 0; padding: 16px 18px; overflow-x: auto; flex: 1; min-width: 0; font: 400 .9rem/1.6 var(--f-mono); }
+.cmd pre code { font: inherit; }
+.cmd pre .c { opacity: .55; user-select: none; }
+.copy {
+  appearance: none; border: 0; border-left: 1px solid color-mix(in srgb, var(--on-ink) 18%, transparent);
+  background: transparent; color: var(--on-ink); cursor: pointer; padding: 0 16px;
+  font: 500 .78rem/1 var(--f-mono); letter-spacing: .04em; min-width: 5.6rem;
+}
+.copy:hover { background: color-mix(in srgb, var(--on-ink) 10%, transparent); }
+.hint { color: var(--ink-2); font-size: .95rem; max-width: 70ch; }
+
+/* ---------- Usar ---------- */
+.chat { display: grid; gap: 14px; max-width: 720px; }
+.bubble {
+  justify-self: end; max-width: 92%; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 16px 16px 4px 16px; padding: 14px 18px; font-size: 1.02rem; box-shadow: var(--shadow);
+}
+.bubble small { display: block; font: 500 .7rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 8px; }
+.reply {
+  justify-self: start; max-width: 92%; border-left: 2px solid var(--petrol); padding: 4px 0 4px 18px; color: var(--ink-2);
+}
+
+/* ---------- Footer ---------- */
+footer { border-top: 2px solid var(--ink); padding-block: 40px 56px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; align-items: baseline; }
+footer p { color: var(--ink-2); font-size: .95rem; }
+footer a { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Indicadores No Hacer, inicio">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11" fill="none" stroke="var(--signal)" stroke-width="2.5"/><path d="M5.5 20.5 20.5 5.5" stroke="var(--signal)" stroke-width="2.5"/></svg>
+      Indicadores «No Hacer»
+    </a>
+    <nav class="nav-links" aria-label="Secciones">
+      <a href="#que-es">Qué es</a>
+      <a href="#medir">Cómo se mide</a>
+      <a href="#analisis">Los 8 análisis</a>
+      <a href="#usar">Cómo usarlo</a>
+      <a class="nav-cta" href="#instalar">Instalar</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <h1><span class="small">Indicadores</span>No <span class="strike">hacer</span></h1>
+      <p class="lede">Lo que no se debería hacer también se puede medir. Un asistente para <strong>Claude</strong> y <strong>ChatGPT</strong> que convierte recomendaciones «No Hacer» en indicadores de calidad asistencial <strong>medibles y reproducibles</strong>.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#instalar">Instalar
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v10m0 0-4-4m4 4 4-4M4 16.5h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="btn ghost" href="#medir">Cómo funciona</a>
+      </div>
+    </div>
+
+    <figure class="anatomy" aria-label="De la recomendación al indicador">
+      <div class="an-label">Una recomendación «No Hacer»</div>
+      <p class="reco"><span class="reco-no">No</span> <span class="slot a">realizar la actuación</span> en <span class="slot p">esta población</span>, salvo <span class="slot e">estas excepciones</span>.</p>
+      <ul class="legend">
+        <li class="a"><i></i><span>Qué no debería hacerse</span></li>
+        <li class="p"><i></i><span>A quién se aplica</span></li>
+        <li class="e"><i></i><span>Cuándo sí está justificado</span></li>
+      </ul>
+      <div class="arrow">se convierte en</div>
+      <div class="result">
+        <div class="frac"><span>Pacientes de esta población que recibieron la actuación</span><span>Pacientes de esta población</span></div>
+        <div class="pct">%<small>Sobre&shy;utilización</small></div>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<section class="block" id="que-es">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">Qué es</p>
+      <h2>Recomendaciones para dejar de hacer lo que no aporta</h2>
+    </div>
+    <div class="prose">
+      <p>Una recomendación «No Hacer» señala una práctica clínica que, en una situación concreta, no aporta valor al paciente: una prueba que no cambia la decisión, un tratamiento sin beneficio demostrado, un seguimiento innecesario. Su objetivo es reducir la sobreutilización y mejorar la adecuación de la práctica.</p>
+      <p>Las publican sociedades científicas y programas de calidad de todo el mundo.</p>
+      <div class="frames" aria-label="Marcos de referencia">
+        <span>Choosing Wisely</span><span>Compromiso por la Calidad</span><span>MAPAC</span><span>Marcos equivalentes</span>
+      </div>
+      <p>Una recomendación bien escrita no es todavía un indicador. Para saber si se cumple hay que decidir qué se cuenta, a quién y con qué excepciones. Ahí empieza el trabajo metodológico.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="medir">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Cómo se mide</p>
+      <h2>Dos preguntas distintas sobre la misma recomendación</h2>
+      <p class="muted">Una recomendación «No Hacer» se puede medir desde la actuación o desde el paciente. No siempre proceden las dos; elegir bien el enfoque condiciona todo lo demás.</p>
+    </div>
+
+    <div class="measure">
+      <div class="m-card">
+        <div class="m-code">AA</div>
+        <h3>Adecuación de la actuación</h3>
+        <p class="m-q muted">De todo lo que se hizo, ¿qué parte se hizo cuando debía evitarse?</p>
+        <div class="fraction">
+          <div><span>Numerador</span>Actuaciones realizadas en circunstancias en las que deberían evitarse</div>
+          <div><span>Denominador</span>Actuaciones realizadas del tipo analizado</div>
+        </div>
+      </div>
+      <div class="m-card">
+        <div class="m-code">SU</div>
+        <h3>Sobreutilización en población diana</h3>
+        <p class="m-q muted">De los pacientes en los que debía evitarse, ¿cuántos acabaron recibiéndola?</p>
+        <div class="fraction">
+          <div><span>Numerador</span>Pacientes o episodios de la población diana que recibieron la actuación</div>
+          <div><span>Denominador</span>Población diana</div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="terms">
+      <div><dt>Excepción</dt><dd>Situación dentro del ámbito clínico en la que la actuación está justificada. No cuenta como incumplimiento.</dd></div>
+      <div><dt>Exclusión</dt><dd>Caso fuera de la población evaluada. Sale del numerador y del denominador.</dd></div>
+      <div><dt>Aclaración</dt><dd>Precisión para aplicar el indicador igual en todas partes. No es una excepción clínica.</dd></div>
+    </dl>
+
+    <figure class="quote">
+      <svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><circle cx="20" cy="32" r="16" stroke="currentColor" stroke-width="2.5"/><circle cx="44" cy="32" r="16" stroke="currentColor" stroke-width="2.5"/></svg>
+      <div>
+        <blockquote>Dos evaluadores independientes, con los mismos datos y las mismas reglas, deben clasificar igual el mismo caso.</blockquote>
+        <figcaption>El criterio de calidad que guía todo el asistente</figcaption>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<section class="block" id="analisis">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Los 8 análisis</p>
+      <h2>De la recomendación al pilotaje, paso a paso o por separado</h2>
+      <p class="muted">Cada análisis funciona solo. Puedes pedir uno suelto o encadenarlos; ninguno exige haber hecho los anteriores.</p>
+    </div>
+
+    <div class="phases">
+      <div class="phase">
+        <div class="phase-label">Definir</div>
+        <div class="an"><div class="an-n">1</div><h3>Afinar la recomendación</h3><p>Qué está poco definido en la actuación, la población o las excepciones.<b>Necesita: la recomendación</b></p></div>
+        <div class="an"><div class="an-n">2</div><h3>Detectar errores de clasificación</h3><p>Falsos positivos, falsos negativos y zonas grises.<b>Necesita: la recomendación</b></p></div>
+        <div class="an"><div class="an-n">3</div><h3>Decidir cómo medirla</h3><p>Si procede AA, SU, ambas u otro enfoque.<b>Necesita: la recomendación</b></p></div>
+      </div>
+      <div class="phase">
+        <div class="phase-label">Construir</div>
+        <div class="an"><div class="an-n">4</div><h3>Construir los indicadores</h3><p>De una o varias recomendaciones a una tabla de indicadores.<b>Necesita: una o varias recomendaciones</b></p></div>
+        <div class="an"><div class="an-n">5</div><h3>Revisar con bibliografía</h3><p>Contrastar una tabla ya hecha con fuentes clínicas.<b>Necesita: la tabla de indicadores</b></p></div>
+        <div class="an"><div class="an-n">6</div><h3>Ficha técnica</h3><p>Vía directa a la ficha de un indicador.<b>Necesita: recomendación y enfoque</b></p></div>
+      </div>
+      <div class="phase">
+        <div class="phase-label">Evaluar</div>
+        <div class="an"><div class="an-n">7</div><h3>Ficha para panel de expertos</h3><p>Documento listo para que el panel lo cumplimente.<b>Necesita: la ficha técnica</b></p></div>
+        <div class="an"><div class="an-n">8</div><h3>Analizar un pilotaje</h3><p>Factibilidad y concordancia entre evaluadores.<b>Necesita: ficha técnica y datos</b></p></div>
+      </div>
+    </div>
+    <p class="note-line">Al encadenar dos análisis, el asistente se detiene y resume qué quedó validado y qué quedó pendiente, para que un error no se arrastre al paso siguiente. Los resultados se entregan en Word, Excel o PDF.</p>
+  </div>
+</section>
+
+<section class="block" id="instalar">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Instalar</p>
+      <h2>Elige dónde lo vas a usar</h2>
+      <p class="muted">En la app o en la web basta con unos clics. Si trabajas en la terminal, hay un comando para cada herramienta.</p>
+    </div>
+
+    <div class="choose" role="tablist" aria-label="Dónde instalarlo">
+      <p class="choose-q">¿Dónde usas la inteligencia artificial?</p>
+      <div class="choices big" role="presentation">
+        <button class="tab" role="tab" id="tab-claude" aria-controls="claude" aria-selected="true"><span class="tab-name">Claude</span><span class="tab-sub">App de escritorio o claude.ai</span><span class="radio" aria-hidden="true"></span></button>
+        <button class="tab" role="tab" id="tab-chatgpt" aria-controls="chatgpt" aria-selected="false" tabindex="-1"><span class="tab-name">ChatGPT</span><span class="tab-sub">App de escritorio o chatgpt.com</span><span class="radio" aria-hidden="true"></span></button>
+      </div>
+      <p class="choose-q sub">¿Trabajas en la terminal?</p>
+      <div class="choices small" role="presentation">
+        <button class="tab" role="tab" id="tab-claude-code" aria-controls="claude-code" aria-selected="false" tabindex="-1"><span class="tab-name">Claude Code</span><span class="tab-sub">plugin</span><span class="radio" aria-hidden="true"></span></button>
+        <button class="tab" role="tab" id="tab-codex" aria-controls="codex" aria-selected="false" tabindex="-1"><span class="tab-name">Codex</span><span class="tab-sub">plugin</span><span class="radio" aria-hidden="true"></span></button>
+        <button class="tab" role="tab" id="tab-npx" aria-controls="npx" aria-selected="false" tabindex="-1"><span class="tab-name">npx skills</span><span class="tab-sub">varios agentes</span><span class="radio" aria-hidden="true"></span></button>
+      </div>
+    </div>
+
+    <div class="panels">
+
+      <div class="panel" id="claude" role="tabpanel" aria-labelledby="tab-claude">
+        <div class="panel-head"><h3>Claude</h3><span class="muted">App de escritorio o claude.ai</span></div>
+
+        <div class="route">
+          <ol class="steps">
+            <li><div class="step-body">
+              <p>En Claude, abre <span class="ui">Customize</span> en la barra lateral y entra en la pestaña <span class="ui">Plugins</span>. Pulsa el botón <span class="ui">+ Add</span>, arriba a la derecha, y elige <span class="ui">Add marketplace</span>.</p>
+              <figure class="shot"><img src="img/claude-m1-menu.jpg" alt="Pestaña Plugins de Customize con el menú Add abierto y la opción Add marketplace" width="1006" height="290" loading="lazy"></figure>
+            </div></li>
+            <li><div class="step-body">
+              <p>En la ventana que se abre, elige <span class="ui">Add from a repository</span>.</p>
+              <figure class="shot"><img src="img/claude-m1b-source.jpg" alt="Ventana Add marketplace con la opción Add from a repository" width="720" height="286" loading="lazy"></figure>
+            </div></li>
+            <li><div class="step-body">
+              <p>Haz clic en el campo <span class="ui">URL</span> y escribe esta dirección tal cual:</p>
+              <div class="cmd"><pre><code>victoriavics/indicadores-no-hacer-skill</code></pre><button class="copy" type="button">Copiar</button></div>
+              <p>Debajo del campo aparecerá <span class="ui">Use "victoriavics/indicadores-no-hacer-skill"</span>: haz clic en esa opción. Después pulsa <span class="ui">Sync</span> y espera unos segundos.</p>
+              <figure class="shot"><img src="img/claude-m2-repo.jpg" alt="Campo URL con victoriavics/indicadores-no-hacer-skill escrito y el botón Sync" width="710" height="385" loading="lazy"></figure>
+            </div></li>
+            <li><div class="step-body">
+              <p>Aparecerá <strong>Indicadores no hacer</strong> en la lista. Pulsa <span class="ui">Add</span>, a la derecha.</p>
+              <figure class="shot"><img src="img/claude-m3-add.jpg" alt="Fila del plugin Indicadores no hacer con el botón Add a la derecha" width="986" height="90" loading="lazy"></figure>
+              <p class="hint">Si sale un aviso amarillo sobre <span class="ui">Auto-sync</span> y GitHub, ciérralo. No afecta a la instalación.</p>
+            </div></li>
+            <li><div class="step-body">
+              <p>Listo. Claude muestra <span class="ui">Indicadores no hacer is installed and ready to use</span> y el interruptor de la derecha queda activado (en azul).</p>
+              <figure class="shot"><img src="img/claude-m4-installed.jpg" alt="Página del plugin Indicadores no hacer instalado, con el interruptor activado" width="986" height="340" loading="lazy"></figure>
+            </div></li>
+            <li><div class="step-body">
+              <p>Abre un chat nuevo y escribe lo que necesitas, por ejemplo: «Te pego una recomendación «No Hacer». ¿Está suficientemente definida para medirla?». <a href="#usar">Más ejemplos</a>.</p>
+            </div></li>
+          </ol>
+        </div>
+
+      </div>
+
+      <div class="panel" id="chatgpt" role="tabpanel" aria-labelledby="tab-chatgpt" hidden>
+        <div class="panel-head"><h3>ChatGPT</h3><span class="muted">App de escritorio o chatgpt.com</span></div>
+        <div class="route">
+          <ol class="steps">
+            <li><div class="step-body">
+              <p>Descarga el archivo. No hace falta descomprimirlo.</p>
+              <p><a class="btn" href="https://github.com/victoriavics/indicadores-no-hacer-skill/releases/latest/download/indicadores-no-hacer.zip">Descargar indicadores-no-hacer.zip</a></p>
+            </div></li>
+            <li><div class="step-body">
+              <p>En la barra lateral, abre <span class="ui">Customize</span> → <span class="ui">Skills</span>, pulsa <span class="ui">Add</span> y elige <span class="ui">Upload from your computer</span>.</p>
+              <figure class="shot"><img src="img/chatgpt-1-menu.jpg" alt="Menú Add de la sección Skills de ChatGPT con la opción Upload from your computer" width="711" height="230" loading="lazy"></figure>
+            </div></li>
+            <li><div class="step-body"><p>Selecciona el zip que acabas de descargar.</p></div></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel" id="claude-code" role="tabpanel" aria-labelledby="tab-claude-code" hidden>
+        <div class="panel-head"><h3>Claude Code</h3></div>
+        <p class="hint">Dentro de Claude Code, o en la pestaña Code de la app de Claude:</p>
+        <div class="cmd"><pre><code>/plugin marketplace add victoriavics/indicadores-no-hacer-skill
+/plugin install indicadores-no-hacer@indicadores-no-hacer</code></pre><button class="copy" type="button">Copiar</button></div>
+      </div>
+
+      <div class="panel" id="codex" role="tabpanel" aria-labelledby="tab-codex" hidden>
+        <div class="panel-head"><h3>Codex</h3></div>
+        <p class="hint">En una terminal:</p>
+        <div class="cmd"><pre><code>codex plugin marketplace add victoriavics/indicadores-no-hacer-skill
+codex plugin add indicadores-no-hacer@indicadores-no-hacer</code></pre><button class="copy" type="button">Copiar</button></div>
+        <p class="hint">Si usas Codex desde la app de escritorio de ChatGPT, reiníciala después.</p>
+      </div>
+
+      <div class="panel" id="npx" role="tabpanel" aria-labelledby="tab-npx" hidden>
+        <div class="panel-head"><h3>npx skills</h3><span class="muted">Claude Code, Codex, Cursor y otros a la vez</span></div>
+        <p class="hint">Necesita <a href="https://nodejs.org/">Node.js</a>. Te preguntará en qué agentes instalarlo.</p>
+        <div class="cmd"><pre><code>npx skills add victoriavics/indicadores-no-hacer-skill -g</code></pre><button class="copy" type="button">Copiar</button></div>
+        <p class="hint">Para instalar una versión nueva, vuelve a ejecutar el comando.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="block" id="usar">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">Cómo usarlo</p>
+      <h2>Escribe lo que necesitas, como a un compañero metodólogo</h2>
+      <p class="muted" style="margin-top:16px">No hay comandos que aprender. Si no dices qué análisis quieres, el asistente te enseña el menú y pregunta por dónde empezar.</p>
+    </div>
+    <div class="chat" aria-label="Ejemplos de peticiones">
+      <div class="bubble"><small>Tú</small>Te pego una recomendación «No Hacer» de mi servicio. ¿Está suficientemente definida para medirla?</div>
+      <div class="reply">Revisa la actuación, la población diana y las excepciones, y señala lo que falta.</div>
+      <div class="bubble"><small>Tú</small>Hazme la ficha técnica de este indicador, enfoque de sobreutilización, en Word.</div>
+      <div class="bubble"><small>Tú</small>Adjunto las clasificaciones de los dos evaluadores del pilotaje. ¿Qué concordancia hay?</div>
+      <div class="reply">Calcula la factibilidad y la concordancia, y analiza los casos discordantes.</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Acompaña al libro sobre indicadores «No Hacer» (en preparación) · Victoria</p>
+    <p><a href="https://github.com/victoriavics/indicadores-no-hacer-skill">Código y versiones en GitHub</a></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function select(id, focus) {
+    var tab = tabs.filter(function (t) { return t.getAttribute('aria-controls') === id; })[0];
+    if (!tab) return false;
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    if (focus) tab.focus();
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+    return true;
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { select(t.getAttribute('aria-controls')); });
+    t.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      var next = tabs[(i + d + tabs.length) % tabs.length];
+      select(next.getAttribute('aria-controls'), true);
+    });
+  });
+  var hash = location.hash.slice(1);
+  if (select(hash)) {
+    window.addEventListener('load', function () {
+      document.getElementById('instalar').scrollIntoView({ behavior: 'instant' });
+    });
+  }
+
+  document.querySelectorAll('.copy').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var code = b.parentNode.querySelector('code');
+      var text = code.textContent;
+      function done(ok) { b.textContent = ok ? 'Copiado' : 'Selecciona'; setTimeout(function () { b.textContent = 'Copiar'; }, 1600); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(code);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done(false);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, fallback);
+      } else { fallback(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

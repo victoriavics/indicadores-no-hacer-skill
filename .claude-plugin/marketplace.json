@@ -1,0 +1,12 @@
+{
+  "name": "indicadores-no-hacer",
+  "description": "Skill «Indicadores No Hacer» de Victoria",
+  "owner": { "name": "Victoria" },
+  "plugins": [
+    {
+      "name": "indicadores-no-hacer",
+      "source": "./",
+      "description": "Asistente metodológico para construir, revisar y evaluar indicadores de calidad asistencial asociados a recomendaciones «No Hacer»."
+    }
+  ]
+}

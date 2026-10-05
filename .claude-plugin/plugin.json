@@ -1,0 +1,7 @@
+{
+  "name": "indicadores-no-hacer",
+  "version": "1.1.1",
+  "description": "Asistente metodológico para construir, revisar y evaluar indicadores de calidad asistencial asociados a recomendaciones «No Hacer».",
+  "author": { "name": "Victoria" },
+  "repository": "https://github.com/victoriavics/indicadores-no-hacer-skill"
+}
